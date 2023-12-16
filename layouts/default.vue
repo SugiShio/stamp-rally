@@ -9,10 +9,9 @@ div
 </template>
 
 <script>
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { getDoc, doc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
-import { app, db } from '~/scripts/firebase';
+import { app } from '~/scripts/firebase';
 const auth = getAuth(app);
 
 export default {
