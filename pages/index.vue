@@ -1,22 +1,16 @@
-<template>
-  <div>
-    <h1>全国の{{ collection.label }}</h1>
-    <ul>
-      <li v-for="prefecture in prefectures">
-        <h2>
-          {{ prefecture.label }}({{
-            itemsGroupedByPrefecture[prefecture.id].length
-          }})
-        </h2>
-        <ul>
-          <li v-for="item in itemsGroupedByPrefecture[prefecture.id]">
-            {{ visitedIds.includes(item.id) }}
-            {{ item.name }}
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </div>
+<template lang="pug">
+.p-index
+  h1
+    | 全国の{{ collection.label }}
+  ul
+    li(v-for="prefecture in prefectures")
+      h2 {{ prefecture.label }}({{ itemsGroupedByPrefecture[prefecture.id].length }})
+      ul
+        li.p-index__collection-item(
+          v-for="item in itemsGroupedByPrefecture[prefecture.id]"
+          :class="{ isVisited: visitedIds.includes(item.id)}"
+          )
+          | {{ item.name }}
 </template>
 
 <script>
@@ -84,3 +78,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.p-index {
+  &__collection-item.isVisited {
+    font-weight: bold;
+  }
+}
+</style>
