@@ -1,11 +1,12 @@
 <template lang="pug">
-div
+.l-default
   header
     template(v-if='isSignin')
       | {{ user.name }}
     atoms-signin(v-else)
 
-  slot
+  .l-default__main
+    slot
 </template>
 
 <script>
@@ -31,3 +32,13 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.l-default {
+  &__main {
+    max-width: 800px;
+    padding: 20px;
+    margin: 0 auto;
+  }
+}
+</style>
