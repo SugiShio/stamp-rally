@@ -1,5 +1,5 @@
 export class User {
-  constructor(user) {
+  constructor(user = {}) {
     this.name = user.name
     this.email = user.email
     this.uid = user.uid || ''

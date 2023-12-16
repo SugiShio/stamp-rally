@@ -47,7 +47,7 @@ export default {
   },
   watch: {
     user(user) {
-      if (!user) return;
+      if (!user || !user.uid) return;
       this.fetchVisitRecords();
     },
   },

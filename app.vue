@@ -15,7 +15,7 @@ export default {
   name: 'App',
   data() {
     return {
-      user: {},
+      user: new User(),
     };
   },
   created() {
@@ -28,7 +28,7 @@ export default {
             ...snapshot.data(),
           });
         } else {
-          this.user = {};
+          this.user = new User();
         }
       }
     });
