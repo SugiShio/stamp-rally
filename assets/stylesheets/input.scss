@@ -1,0 +1,12 @@
+@import '~/assets/stylesheets/variables';
+%input {
+  background-color: rgba(#fff, 0.6);
+  border-radius: 5px;
+  border: 1px solid $color-main-dark;
+  padding: 10px 15px;
+  appearance: none;
+
+  &.small {
+    padding: 5px 15px;
+  }
+}

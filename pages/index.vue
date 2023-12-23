@@ -10,16 +10,31 @@
         li.p-index__collection-item(
           v-for="item in itemsGroupedByPrefecture[prefecture.id]",
           :class="{ isVisited: visitedIds.includes(item.id) }"
+          @click='openForm(item)'
         )
           | {{ item.name }}
+  .p-index__form(v-if='isFormShow')
+    button(@click='isFormShow = false' type='button') 閉じる
+    div
+      |{{items.find(item => item.id === visitRecord.collectionId).name}}
+    div
+      label
+        | 訪問した日:
+        input.p-index__input(v-model='visitRecord.visitedAtText')
+    div
+      label
+        | メモ
+        textarea.p-index__textarea(v-model='visitRecord.description')
+    button(type='button' @click='onSaveClicked') 送信
 </template>
 
 <script>
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '~/scripts/firebase';
 import { COLLECTIONS } from '~/constants/collections';
 import { PREFECTURES } from '~/constants/prefectures';
 import { User } from '~/models/user';
+import { VisitRecord } from '~/models/visitRecord';
 
 export default {
   name: 'PagesIndex',
@@ -29,9 +44,11 @@ export default {
   data() {
     return {
       collection: COLLECTIONS[0],
+      isFormShow: false,
       items: [],
       prefectures: PREFECTURES,
       visitedIds: [],
+      visitRecord: new VisitRecord(),
     };
   },
   computed: {
@@ -64,6 +81,18 @@ export default {
     this.fetchVisitRecords();
   },
   methods: {
+    async onSaveClicked() {
+      try {
+        await addDoc(collection(db, 'visitRecords'), {
+          uid: this.user.uid,
+          ...this.visitRecord,
+        });
+        this.isFormShow = false;
+      } catch (e) {
+        console.error(e);
+      }
+    },
+
     async fetchVisitRecords() {
       const q = query(
         collection(db, 'visitRecords'),
@@ -74,6 +103,14 @@ export default {
       snapShots.forEach(async (snapShot) => {
         const visitRecord = snapShot.data();
         this.visitedIds.push(visitRecord.collectionId);
+      });
+    },
+    openForm(item) {
+      this.isFormShow = true;
+      this.visitRecord = new VisitRecord({
+        uid: this.user.uid,
+        collection: this.collection.value,
+        collectionId: item.id,
       });
     },
   },
@@ -105,6 +142,28 @@ export default {
     &.isVisited {
       font-weight: bold;
     }
+  }
+
+  &__form {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    width: 80vw;
+    height: 80vw;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #000;
+    padding: 20px;
+  }
+
+  &__input,
+  &__textarea {
+    border: 1px solid;
+    border-radius: 5px;
+    padding: 5px 10px;
   }
 }
 </style>
